@@ -21,8 +21,11 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (lives <= 0)
-            Debug.Log("game over");
+        // none
+    }
+
+    void Restart(){
+        lives = 3;
     }
 
     private void Move()

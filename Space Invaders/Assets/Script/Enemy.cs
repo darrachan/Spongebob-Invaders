@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class Enemy : MonoBehaviour
 
     public static bool down = false;
 
+    public Text scoreText;
+
 
 
     public int x;
@@ -21,6 +24,14 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         speed = 2.0f;
+        scoreText = GameObject.Find("Score").GetComponent<Text>();
+    }
+
+    void Restart(){
+        incr = true;
+        moveDown = true;
+        score = 0;
+        down = false;
     }
 
     // Update is called once per frame
@@ -55,7 +66,7 @@ public class Enemy : MonoBehaviour
         }
 
         GameManager.enemiesAlive[x, y] = false;
-        //Debug.Log(score);
+        scoreText.text = "Score: " + score.ToString();
         Destroy(gameObject);
     }
 
@@ -79,7 +90,6 @@ public class Enemy : MonoBehaviour
         {
             Debug.Log("won by ground");
             GameManager.gameWon = true;
-            //Debug.Log("won by ground");
         }
     }
 

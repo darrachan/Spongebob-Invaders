@@ -19,11 +19,26 @@ public class EnemyBulletLogic : MonoBehaviour
     {
     }
 
+    void Restart(){
+        GameObject.Find("Life3").SetActive(true);
+        GameObject.Find("Life2").SetActive(true);
+        GameObject.Find("Life1").SetActive(true);
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
             PlayerController.lives -= 1;
+
+            if (PlayerController.lives == 2){
+                GameObject.Find("Life3").SetActive(false);
+            } else if (PlayerController.lives == 1){
+                GameObject.Find("Life2").SetActive(false);
+            } else if (PlayerController.lives == 0){
+                GameObject.Find("Life1").SetActive(false);
+            }
+
             Destroy(gameObject);
         }
     }

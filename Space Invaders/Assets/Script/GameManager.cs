@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,11 +11,18 @@ public class GameManager : MonoBehaviour
     public GameObject enemy;
     public GameObject projectile;
     public GameObject player;
+    public bool happenedOnce;
 
     public static bool gameWon = false;
 
     private GameObject furthestLeft;
     private GameObject furthestRight;
+
+    public GameObject LoserText;
+    public GameObject WinText;
+    public GameObject btn1;
+    public GameObject btn2;
+
 
     //private GameObject[] bottomEnemies;
 
@@ -28,6 +36,20 @@ public class GameManager : MonoBehaviour
         enemiesAlive = new bool[11, 5];
         InitializeEnemies();
         Invoke("Shoot", 0.5f);
+        happenedOnce = false;
+
+    }
+
+    void Restart(){
+        x = 0;
+        y = 0;
+        gameWon = false;
+        Enemy.incr = true;
+        enemies = new GameObject[11, 5];
+        enemiesAlive = new bool[11, 5];
+        InitializeEnemies();
+        Invoke("Shoot", 0.5f);
+        happenedOnce = false;      
     }
 
     // instantiates the block of enemies
@@ -37,7 +59,7 @@ public class GameManager : MonoBehaviour
         {
             for (int j = 0; j < 5; j++)
             {
-                enemies[i,j] = Instantiate(enemy, new Vector3(-7.4f + i,j +.2f, 0), Quaternion.identity);
+                enemies[i,j] = Instantiate(enemy, new Vector3(-7.4f + i,j -1f, 0), Quaternion.identity);
                 Enemy en = (Enemy)enemies[i, j].GetComponent(typeof(Enemy));
                 en.SetCoords(i, j);
                 enemiesAlive[i, j] = true;
@@ -123,13 +145,17 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
         GameObject[] existingEnemy = GameObject.FindGameObjectsWithTag("enemy");
-        if (existingEnemy.Length == 0)
+        if (existingEnemy.Length == 0 && !gameWon)
         {
             gameWon = true;
             Debug.Log("no more enemies");
+            ShowWinText();
+            happenedOnce = true;
+            ShowButtons();
         }
-        if (PlayerController.lives <= 0)  // can combine this in an or statement with the above if statement. just had it separate to show me why the game was lost
+        if (PlayerController.lives <= 0 && !gameWon)  // can combine this in an or statement with the above if statement. just had it separate to show me why the game was lost
         {
             Debug.Log("lost all lives");
             gameWon = true;
@@ -140,8 +166,27 @@ public class GameManager : MonoBehaviour
         }
         else  // game is lost. switch scenes? game over scene? or overlay?
         {
-            DisableCharacters();
+            if (!happenedOnce){
+                DisableCharacters();
+                ShowLoseText();
+                happenedOnce = true;
+                ShowButtons();
+            }
         }
+    }
+
+    void ShowWinText(){
+        WinText.SetActive(true);
+       
+    }
+
+    void ShowLoseText(){
+        LoserText.SetActive(true);
+    }
+
+    void ShowButtons(){
+        btn1.SetActive(true);
+        btn2.SetActive(true);
     }
 
     // picks a random enemy from the bottom enemies 
@@ -238,7 +283,7 @@ public class GameManager : MonoBehaviour
             {
                 if (enemiesAlive[i, j])
                 {
-                    enemies[i, j].SetActive(false);
+                    Destroy(enemies[i, j]);
                 }
             }
         }
