@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         // none
-        if (canShoot && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow)))
+        if (canShoot && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetMouseButtonDown(0)))
         {
             Instantiate(projectile, new Vector3(projectileLocation.transform.position.x, projectileLocation.transform.position.y, 1), projectileLocation.rotation); //projectileLocation.position
             canShoot = false;
@@ -35,17 +35,18 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    void Restart(){
+    public void Restart(){
         lives = 3;
+        canShoot = true;
     }
 
     private void Move()
     {
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
             transform.position += Vector3.right * playerSpeed * Time.deltaTime;
         }
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A))
         {
             transform.position += Vector3.right * -playerSpeed * Time.deltaTime;
         }

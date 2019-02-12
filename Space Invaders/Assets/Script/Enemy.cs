@@ -27,7 +27,7 @@ public class Enemy : MonoBehaviour
         scoreText = GameObject.Find("Score").GetComponent<Text>();
     }
 
-    void Restart(){
+    public void Restart(){
         incr = true;
         moveDown = true;
         score = 0;

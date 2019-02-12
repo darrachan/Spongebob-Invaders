@@ -40,7 +40,8 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void Restart(){
+    public void Restart(){
+        player.SetActive(true);
         x = 0;
         y = 0;
         gameWon = false;
@@ -151,6 +152,7 @@ public class GameManager : MonoBehaviour
         {
             gameWon = true;
             Debug.Log("no more enemies");
+            player.SetActive(false);
             ShowWinText();
             happenedOnce = true;
             ShowButtons();

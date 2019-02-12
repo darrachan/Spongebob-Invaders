@@ -19,12 +19,6 @@ public class EnemyBulletLogic : MonoBehaviour
     {
     }
 
-    void Restart(){
-        GameObject.Find("Life3").SetActive(true);
-        GameObject.Find("Life2").SetActive(true);
-        GameObject.Find("Life1").SetActive(true);
-    }
-
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
