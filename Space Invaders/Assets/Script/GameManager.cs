@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public GameObject projectile;
     public GameObject player;
     public bool happenedOnce;
+    public GameObject squid;
+    public int timesShot;
 
     public static bool gameWon = false;
 
@@ -31,16 +33,18 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        timesShot = 0;
         Enemy.incr = true;
         enemies = new GameObject[11, 5];
         enemiesAlive = new bool[11, 5];
         InitializeEnemies();
         Invoke("Shoot", 0.5f);
         happenedOnce = false;
-
+       
     }
 
     public void Restart(){
+        timesShot = 0;
         player.SetActive(true);
         x = 0;
         y = 0;
@@ -142,6 +146,11 @@ public class GameManager : MonoBehaviour
         return enemies[lowestLocation[0], lowestLocation[1]];
     }
 
+    public bool getGameWon()
+    {
+        return gameWon;
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -150,6 +159,10 @@ public class GameManager : MonoBehaviour
         GameObject[] existingEnemy = GameObject.FindGameObjectsWithTag("enemy");
         if (existingEnemy.Length == 0 && !gameWon)
         {
+            if (GameObject.Find("Squid_Doodle_stock_art"))
+            {
+                Destroy(GameObject.Find("Squid_Doodle_stock_art"));
+            }
             gameWon = true;
             Debug.Log("no more enemies");
             player.SetActive(false);
@@ -161,6 +174,10 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("lost all lives");
             gameWon = true;
+            if (GameObject.Find("Squid_Doodle_stock_art"))
+            {
+                Destroy(GameObject.Find("Squid_Doodle_stock_art"));
+            }
         }
         if (!gameWon)   // while the game is still going, keep moving the jellyfish
         {
@@ -173,6 +190,10 @@ public class GameManager : MonoBehaviour
                 ShowLoseText();
                 happenedOnce = true;
                 ShowButtons();
+                if (GameObject.Find("Squid_Doodle_stock_art"))
+                {
+                    Destroy(GameObject.Find("Squid_Doodle_stock_art"));
+                }
             }
         }
     }
@@ -246,7 +267,7 @@ public class GameManager : MonoBehaviour
                 if (enemiesAlive[i, j])
                 {
                     enemies[i, j].transform.position += Vector3.down * 20 * Time.deltaTime;
-                    if (enemies[i, j].transform.position.y < -5.0f)
+                    if (enemies[i, j].transform.position.y < -4.0f)
                     {
                         gameWon = true;
                         Debug.Log("lost by touching ground");
@@ -259,12 +280,32 @@ public class GameManager : MonoBehaviour
     // causes the random enemy to shoot in a random interval
     void Shoot()
     {
+        timesShot++;
+        SpawnSquid();
         float randomInterval = Random.Range(1.0f, 4.0f);  // can change this random time interval
 
-        GameObject shootingEnemy = PickRandomEnemy();
-        Instantiate(projectile, shootingEnemy.transform.position, shootingEnemy.transform.rotation);
-       
-        Invoke("Shoot", randomInterval);
+        GameObject[] existingEnemy = GameObject.FindGameObjectsWithTag("enemy");
+        if (existingEnemy.Length != 0 && !gameWon)
+        {
+            GameObject shootingEnemy = PickRandomEnemy();
+            Instantiate(projectile, shootingEnemy.transform.position, shootingEnemy.transform.rotation);
+
+            Invoke("Shoot", randomInterval);
+        }    
+    }
+
+    void SpawnSquid()
+    {
+        int randomChance = -1;
+        if (timesShot >= 6)
+        {
+            randomChance = Random.Range(0, 3);
+        }
+        if (randomChance == 0)
+        {
+            Instantiate(squid, new Vector3(0, 0, 0), Quaternion.identity);
+            timesShot = 0;
+        }
     }
 
     // invokes Shoot()

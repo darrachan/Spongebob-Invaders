@@ -28,12 +28,20 @@ public class BulletLogic : MonoBehaviour
             hitAnEnemy = true;
             PlayerController.canShoot = true;
             Destroy(gameObject);
+        } else if (collision.gameObject.CompareTag("squid"))
+        {
+            
+            GameObject.Find("EnemyRestartLogic").GetComponent<Enemy>().addUFO();
+            PlayerController.canShoot = true;
+            Destroy(collision.gameObject);
+            Destroy(gameObject);
+
         }
     }
 
     private void FixedUpdate()
     {
-        if (transform.position.y > 15)
+        if (transform.position.y > 4)
         {
             PlayerController.canShoot = true;
             Destroy(gameObject);

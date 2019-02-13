@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class EnemyBulletLogic : MonoBehaviour
 {
-    public float speed = 2.0F;
+    public float speed = 1.0F;
    // private bool hitAnEnemy = false;
     public Rigidbody2D rb;
 
     // Start is called before the first frame update
     void Start()
     {
-        rb.velocity = -transform.up * speed;
+         rb.velocity = -transform.up * speed;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (GameObject.Find("Cube").GetComponent<GameManager>().getGameWon())
+        {
+            if (!gameObject.CompareTag("main"))
+            {
+                Destroy(gameObject);
+            }
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

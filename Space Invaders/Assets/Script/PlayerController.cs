@@ -19,6 +19,11 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
     }
 
+    public int getLives()
+    {
+        return lives;
+    }
+
     // Update is called once per frame
     void Update()
     {

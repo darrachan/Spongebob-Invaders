@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
-    public float speed = 2.0f;
+    public float speed = 1.0f;
     public float downSpeed = 10.0f;
     public static bool incr = true;
     public static bool moveDown = true;
@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        speed = 2.0f;
+        speed = 1.0f;
         scoreText = GameObject.Find("Score").GetComponent<Text>();
     }
 
@@ -52,11 +52,11 @@ public class Enemy : MonoBehaviour
     public void Kill()
     {
         //Debug.Log(x.ToString() + " " + y.ToString());
-        if (y == 0)
+        if (y <= 1)
         {
             score += 10;
         }
-        else if (y <= 2)
+        else if (y <= 3)
         {
             score += 20;
         }
@@ -74,6 +74,14 @@ public class Enemy : MonoBehaviour
     public void MoveDown()
     {
         transform.position += Vector3.down * 20 * Time.deltaTime;
+    }
+
+    public void addUFO()
+    {
+        int[] scores = { 100, 150, 200, 250, 300 };
+        int randI = Random.Range(0, 5);
+        score += scores[randI];
+        scoreText.text = "Score: " + score.ToString();
     }
 
     public void SetCoords(int i, int j)
